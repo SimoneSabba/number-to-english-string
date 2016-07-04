@@ -36,19 +36,21 @@ function isNegative(value) {
 
 // ========== file: /src/toWords.js ==========
 
-var CONSTANTS = getConstant();
+var
+    CONSTANTS = getConstant(),
+    ERRORS = getErrorMessages();
 
 function toWords(number) {
     var
         words,
         num;
 
-    if (!isNumber(number)) throw new TypeError('Not a number: ' + number );
+    if (!isNumber(number)) throw new TypeError(ERRORS.NOT_A_NUMBER + number );
 
     num = parseInt(number, 10);
 
-    if (isNegative(num)) throw new TypeError('Negative number not allowed: ' + number );
-    if (!isFinite(num)) throw new TypeError('Not a finite number: ' + number + ' (' + typeof number + ')');
+    if (isNegative(num)) throw new TypeError(ERRORS.NEGATIVE_NUMBER + number );
+    if (!isFinite(num)) throw new TypeError(ERRORS.NOT_FINITE_NUMBER + number + ' (' + typeof number + ')');
 
     return generateWords(num);
 }
@@ -112,7 +114,7 @@ function generateWords(number) {
 
 // ========== file: /src/constants.js ==========
 
-function getConstant(value) {
+function getConstant() {
     return {
         TEN: 10,
         ONE_HUNDRED: 100,
@@ -131,6 +133,17 @@ function getConstant(value) {
         BILLION: 'billion',
         TRILLION: 'trillion',
         QUADRILLION: 'quadrillion'
+    };
+}
+
+
+// ========== file: /src/errors.js ==========
+
+function getErrorMessages() {
+    return {
+        NOT_A_NUMBER: 'Not a number: ',
+        NEGATIVE_NUMBER: 'Negative number not allowed: ',
+        NOT_FINITE_NUMBER: 'Not a finite number: '
     };
 }
 

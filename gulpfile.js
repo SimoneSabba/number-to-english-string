@@ -21,7 +21,8 @@ var files = [
     './src/isNumber.js',
     './src/isNegative.js',
     './src/toWords.js',
-    './src/constants.js'
+    './src/constants.js',
+    './src/errors.js'
 ];
 
 gulp.task('default', ['build']);

@@ -1,6 +1,6 @@
 'use strict';
 
-function getConstant(value) {
+function getConstant() {
     return {
         TEN: 10,
         ONE_HUNDRED: 100,

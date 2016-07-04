@@ -4,19 +4,22 @@ var isFinite = require('./isFinite');
 var isNegative = require('./isNegative');
 var isNumber = require('./isNumber');
 var getConstant = require('./constants');
-var CONSTANTS = getConstant();
+var getErrorMessages = require('./errors');
+var
+    CONSTANTS = getConstant(),
+    ERRORS = getErrorMessages();
 
 function toWords(number) {
     var
         words,
         num;
 
-    if (!isNumber(number)) throw new TypeError('Not a number: ' + number );
+    if (!isNumber(number)) throw new TypeError(ERRORS.NOT_A_NUMBER + number );
 
     num = parseInt(number, 10);
 
-    if (isNegative(num)) throw new TypeError('Negative number not allowed: ' + number );
-    if (!isFinite(num)) throw new TypeError('Not a finite number: ' + number + ' (' + typeof number + ')');
+    if (isNegative(num)) throw new TypeError(ERRORS.NEGATIVE_NUMBER + number );
+    if (!isFinite(num)) throw new TypeError(ERRORS.NOT_FINITE_NUMBER + number + ' (' + typeof number + ')');
 
     return generateWords(num);
 }
