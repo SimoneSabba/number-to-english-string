@@ -1,0 +1,39 @@
+{
+  "name": "number-to-english-string",
+  "description": "",
+  "version": "1.0.0",
+  "main": "./src",
+  "author": "Simone Sabbatini",
+  "devDependencies": {
+    "fs": "0.0.2",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^1.4.0",
+    "gulp-util": "^3.0.7",
+    "gulp-wrap": "^0.11.0",
+    "http-server": "^0.9.0",
+    "jasmine": "^2.3.2",
+    "phantomjs-prebuilt": "^2.1.7"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "test": "npm run test:node",
+    "test:node": "jasmine",
+    "test:phantom": "node_modules/phantomjs-prebuilt/bin/phantomjs node_modules/phantomjs-prebuilt/lib/phantom/examples/run-jasmine2.js 'http://localhost:3456/spec/'",
+    "test:server": "http-server ./ -p 3456"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SimoneSabba/number-to-english-string"
+  },
+  "keywords": [
+    "converter",
+    "number",
+    "ordinal",
+    "string",
+    "tool",
+    "word"
+  ]
+}
