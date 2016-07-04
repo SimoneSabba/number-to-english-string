@@ -155,11 +155,11 @@ function getErrorMessages() {
 
     if (typeof exports != 'undefined') {
         if (typeof module != 'undefined' && module.exports) {
-            exports = module.exports = numberToWords;
+            exports = module.exports = toWords;
         }
-        exports.numberToWords = numberToWords;
+        exports.numberToWords = toWords;
     } else {
-        root.numberToWords = numberToWords;
+        root.numberToWords = toWords;
     }
 
 }());
