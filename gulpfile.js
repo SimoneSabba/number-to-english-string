@@ -20,7 +20,8 @@ var files = [
     './src/isFinite.js',
     './src/isNumber.js',
     './src/isNegative.js',
-    './src/toWords.js'
+    './src/toWords.js',
+    './src/constants.js'
 ];
 
 gulp.task('default', ['build']);
