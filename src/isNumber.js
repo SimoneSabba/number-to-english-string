@@ -1,7 +1,7 @@
 'use strict';
 
-function isNunmber(value) {
+function isNumber(value) {
     return typeof value === 'number';
 }
 
-module.exports = isNunmber;
+module.exports = isNumber;

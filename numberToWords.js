@@ -1,10 +1,10 @@
 /*!
  * Number-To-Words util
- * @version v1.2.3
- * @link https://github.com/marlun78/number-to-words
- * @author Martin Eneqvist (https://github.com/marlun78)
- * @contributors Aleksey Pilyugin (https://github.com/pilyugin),Jeremiah Hall (https://github.com/jeremiahrhall)
- * @license MIT
+ * @version v1.0.0
+ * @link 
+ * @author Simone Sabbatini
+ * @contributors 
+ * @license 
  */
 (function () {
     'use strict';
@@ -22,7 +22,7 @@ function isFinite(value) {
 
 // ========== file: /src/isNumber.js ==========
 
-function isNunmber(value) {
+function isNumber(value) {
     return typeof value === 'number';
 }
 
@@ -36,46 +36,31 @@ function isNegative(value) {
 
 // ========== file: /src/toWords.js ==========
 
-console.log(isFinite);
+var
+    CONSTANTS = getConstant(),
+    ERRORS = getErrorMessages();
 
-var TEN = 10;
-var ONE_HUNDRED = 100;
-var ONE_THOUSAND = 1000;
-var ONE_MILLION = 1000000;
-var ONE_BILLION = 1000000000;           //         1.000.000.000 (9)
-var ONE_TRILLION = 1000000000000;       //     1.000.000.000.000 (12)
-var ONE_QUADRILLION = 1000000000000000; // 1.000.000.000.000.000 (15)
-var MAX = 9007199254740992;             // 9.007.199.254.740.992 (15)
-
-var LESS_THAN_TWENTY = [
-    'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
-    'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'
-];
-
-var TENTHS_LESS_THAN_HUNDRED = [
-    'zero', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
-];
-
-/**
- * Converts an integer into words.
- * If number is decimal, the decimals will be removed.
- * @example toWords(12) => 'twelve'
- * @param {number|string} number
- * @returns {string}
- */
 function toWords(number) {
-    var words;
-    var num = parseInt(number, 10);
-    if (!isFinite(num)) throw new TypeError('Not a finite number: ' + number + ' (' + typeof number + ')');
-    words = generateWords(num);
-    return words;
+    var
+        words,
+        num;
+
+    if (!isNumber(number)) throw new TypeError(ERRORS.NOT_A_NUMBER + number );
+
+    num = parseInt(number, 10);
+
+    if (isNegative(num)) throw new TypeError(ERRORS.NEGATIVE_NUMBER + number );
+    if (!isFinite(num)) throw new TypeError(ERRORS.NOT_FINITE_NUMBER + number + ' (' + typeof number + ')');
+
+    return generateWords(num);
 }
 
 function generateWords(number) {
-    var remainder, word,
+    var
+        carryOn,
+        word,
         words = arguments[1];
 
-    // We’re done
     if (number === 0) {
         return !words ? 'zero' : words.join(' ').replace(/,$/, '');
     }
@@ -83,53 +68,83 @@ function generateWords(number) {
     if (!words) {
         words = [];
     }
-    // If negative, prepend “minus”
-    if (number < 0) {
-        words.push('minus');
-        number = Math.abs(number);
-    }
 
     if (number < 20) {
-        remainder = 0;
-        word = LESS_THAN_TWENTY[number];
+        carryOn = 0;
+        word = CONSTANTS.LESS_THAN_TWENTY[number];
 
-    } else if (number < ONE_HUNDRED) {
-        remainder = number % TEN;
-        word = TENTHS_LESS_THAN_HUNDRED[Math.floor(number / TEN)];
-        // In case of remainder, we need to handle it here to be able to add the “-”
-        if (remainder) {
-            word += '-' + LESS_THAN_TWENTY[remainder];
-            remainder = 0;
+    } else if (number < CONSTANTS.ONE_HUNDRED) {
+        carryOn = number % CONSTANTS.TEN;
+        word = CONSTANTS.TENTHS_LESS_THAN_HUNDRED[Math.floor(number / CONSTANTS.TEN)];
+
+        if (carryOn) {
+            word += ' ' + CONSTANTS.LESS_THAN_TWENTY[carryOn];
+            carryOn = 0;
         }
 
-    } else if (number < ONE_THOUSAND) {
-        remainder = number % ONE_HUNDRED;
-        word = generateWords(Math.floor(number / ONE_HUNDRED)) + ' hundred and ';
+    } else if (number < CONSTANTS.ONE_THOUSAND) {
+        carryOn = number % CONSTANTS.ONE_HUNDRED;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_HUNDRED)) + ' ' + CONSTANTS.HUNDRED_AND;
 
-    } else if (number < ONE_MILLION) {
-        remainder = number % ONE_THOUSAND;
-        word = generateWords(Math.floor(number / ONE_THOUSAND)) + ' thousand';
+    } else if (number < CONSTANTS.ONE_MILLION) {
+        carryOn = number % CONSTANTS.ONE_THOUSAND;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_THOUSAND)) + ' ' + CONSTANTS.THOUSAND;
 
-    } else if (number < ONE_BILLION) {
-        remainder = number % ONE_MILLION;
-        word = generateWords(Math.floor(number / ONE_MILLION)) + ' million';
+    } else if (number < CONSTANTS.ONE_BILLION) {
+        carryOn = number % CONSTANTS.ONE_MILLION;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_MILLION)) + ' ' + CONSTANTS.MILLION;
 
-    } else if (number < ONE_TRILLION) {
-        remainder = number % ONE_BILLION;
-        word = generateWords(Math.floor(number / ONE_BILLION)) + ' billion';
+    } else if (number < CONSTANTS.ONE_TRILLION) {
+        carryOn = number % CONSTANTS.ONE_BILLION;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_BILLION)) + ' ' + CONSTANTS.BILLION;
 
-    } else if (number < ONE_QUADRILLION) {
-        remainder = number % ONE_TRILLION;
-        word = generateWords(Math.floor(number / ONE_TRILLION)) + ' trillion';
+    } else if (number < CONSTANTS.ONE_QUADRILLION) {
+        carryOn = number % CONSTANTS.ONE_TRILLION;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_TRILLION)) + ' ' + CONSTANTS.TRILLION;
 
-    } else if (number <= MAX) {
-        remainder = number % ONE_QUADRILLION;
-        word = generateWords(Math.floor(number / ONE_QUADRILLION)) +
-        ' quadrillion';
+    } else if (number <= CONSTANTS.MAX) {
+        carryOn = number % CONSTANTS.ONE_QUADRILLION;
+        word = generateWords(Math.floor(number / CONSTANTS.ONE_QUADRILLION)) + ' '+CONSTANTS.QUADRILLION;
     }
 
     words.push(word);
-    return generateWords(remainder, words);
+    return generateWords(carryOn, words);
+}
+
+
+// ========== file: /src/constants.js ==========
+
+function getConstant() {
+    return {
+        TEN: 10,
+        ONE_HUNDRED: 100,
+        ONE_THOUSAND: 1000,
+        ONE_MILLION: 1000000,
+        ONE_BILLION: 1000000000,
+        ONE_TRILLION: 1000000000000,
+        ONE_QUADRILLION: 1000000000000000,
+        MAX: 9007199254740992,
+        TENTHS_LESS_THAN_HUNDRED: ['zero', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'],
+        LESS_THAN_TWENTY:['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+        'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'],
+        HUNDRED_AND: 'hundred and',
+        THOUSAND: 'thousand',
+        MILLION: 'million',
+        BILLION: 'billion',
+        TRILLION: 'trillion',
+        QUADRILLION: 'quadrillion'
+    };
+}
+
+
+// ========== file: /src/errors.js ==========
+
+function getErrorMessages() {
+    return {
+        NOT_A_NUMBER: 'Not a number: ',
+        NEGATIVE_NUMBER: 'Negative number not allowed: ',
+        NOT_FINITE_NUMBER: 'Not a finite number: '
+    };
 }
 
 
@@ -140,11 +155,11 @@ function generateWords(number) {
 
     if (typeof exports != 'undefined') {
         if (typeof module != 'undefined' && module.exports) {
-            exports = module.exports = numberToWords;
+            exports = module.exports = toWords;
         }
-        exports.numberToWords = numberToWords;
+        exports.numberToWords = toWords;
     } else {
-        root.numberToWords = numberToWords;
+        root.numberToWords = toWords;
     }
 
 }());
