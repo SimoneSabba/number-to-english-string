@@ -1,10 +1,10 @@
 /*!
  * Number-To-Words util
- * @version v1.2.3
- * @link https://github.com/marlun78/number-to-words
- * @author Martin Eneqvist (https://github.com/marlun78)
- * @contributors Aleksey Pilyugin (https://github.com/pilyugin),Jeremiah Hall (https://github.com/jeremiahrhall)
- * @license MIT
+ * @version v1.0.0
+ * @link 
+ * @author Simone Sabbatini
+ * @contributors 
+ * @license 
  */
 (function () {
     'use strict';
@@ -22,7 +22,7 @@ function isFinite(value) {
 
 // ========== file: /src/isNumber.js ==========
 
-function isNunmber(value) {
+function isNumber(value) {
     return typeof value === 'number';
 }
 
@@ -36,16 +36,15 @@ function isNegative(value) {
 
 // ========== file: /src/toWords.js ==========
 
-console.log(isFinite);
 
 var TEN = 10;
 var ONE_HUNDRED = 100;
 var ONE_THOUSAND = 1000;
 var ONE_MILLION = 1000000;
-var ONE_BILLION = 1000000000;           //         1.000.000.000 (9)
-var ONE_TRILLION = 1000000000000;       //     1.000.000.000.000 (12)
-var ONE_QUADRILLION = 1000000000000000; // 1.000.000.000.000.000 (15)
-var MAX = 9007199254740992;             // 9.007.199.254.740.992 (15)
+var ONE_BILLION = 1000000000;
+var ONE_TRILLION = 1000000000000;
+var ONE_QUADRILLION = 1000000000000000;
+var MAX = 9007199254740992;
 
 var LESS_THAN_TWENTY = [
     'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
@@ -56,37 +55,33 @@ var TENTHS_LESS_THAN_HUNDRED = [
     'zero', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
 ];
 
-/**
- * Converts an integer into words.
- * If number is decimal, the decimals will be removed.
- * @example toWords(12) => 'twelve'
- * @param {number|string} number
- * @returns {string}
- */
 function toWords(number) {
-    var words;
-    var num = parseInt(number, 10);
+    var
+        words,
+        num;
+
+    if (!isNumber(number)) throw new TypeError('Not a number: ' + number );
+
+    num = parseInt(number, 10);
+
+    if (isNegative(num)) throw new TypeError('Negative number not allowed: ' + number );
     if (!isFinite(num)) throw new TypeError('Not a finite number: ' + number + ' (' + typeof number + ')');
-    words = generateWords(num);
-    return words;
+
+    return generateWords(num);
 }
 
 function generateWords(number) {
-    var remainder, word,
+    var
+        remainder,
+        word,
         words = arguments[1];
 
-    // We’re done
     if (number === 0) {
         return !words ? 'zero' : words.join(' ').replace(/,$/, '');
     }
     // First run
     if (!words) {
         words = [];
-    }
-    // If negative, prepend “minus”
-    if (number < 0) {
-        words.push('minus');
-        number = Math.abs(number);
     }
 
     if (number < 20) {
@@ -96,15 +91,15 @@ function generateWords(number) {
     } else if (number < ONE_HUNDRED) {
         remainder = number % TEN;
         word = TENTHS_LESS_THAN_HUNDRED[Math.floor(number / TEN)];
-        // In case of remainder, we need to handle it here to be able to add the “-”
+
         if (remainder) {
-            word += '-' + LESS_THAN_TWENTY[remainder];
+            word += ' ' + LESS_THAN_TWENTY[remainder];
             remainder = 0;
         }
 
     } else if (number < ONE_THOUSAND) {
         remainder = number % ONE_HUNDRED;
-        word = generateWords(Math.floor(number / ONE_HUNDRED)) + ' hundred and ';
+        word = generateWords(Math.floor(number / ONE_HUNDRED)) + ' hundred and';
 
     } else if (number < ONE_MILLION) {
         remainder = number % ONE_THOUSAND;
@@ -124,8 +119,7 @@ function generateWords(number) {
 
     } else if (number <= MAX) {
         remainder = number % ONE_QUADRILLION;
-        word = generateWords(Math.floor(number / ONE_QUADRILLION)) +
-        ' quadrillion';
+        word = generateWords(Math.floor(number / ONE_QUADRILLION)) + ' quadrillion';
     }
 
     words.push(word);
