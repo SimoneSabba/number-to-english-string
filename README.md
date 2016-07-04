@@ -9,5 +9,5 @@ run npm install
 gulp build
 
 ### How to run unit test
-launch the server http-server ./ -p 8080
-run test npm run test:node
+- http-server ./ -p 8080
+- npm run test:node
